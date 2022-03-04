@@ -28,7 +28,7 @@ namespace WebVendasMVC
             services.AddControllersWithViews();
 
             services.AddDbContext<WebVendasMVCContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("WebVendasMVCContext")));
+                    options.UseMySql(Configuration.GetConnectionString("WebVendasMVCContext"), builder => builder.MigrationsAssembly("WebVendasMVC")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
