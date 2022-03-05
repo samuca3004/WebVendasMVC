@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using WebVendasMVC.Models;
 using WebVendasMVC.Data;
 
 namespace WebVendasMVC
@@ -29,14 +30,17 @@ namespace WebVendasMVC
 
             services.AddDbContext<WebVendasMVCContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("WebVendasMVCContext"), builder => builder.MigrationsAssembly("WebVendasMVC")));
+
+            services.AddScoped<SeedingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SeedingService seedingService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                seedingService.Seed();
             }
             else
             {
