@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebVendasMVC.Models;
 using WebVendasMVC.Data;
+using WebVendasMVC.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace WebVendasMVC
 {
@@ -32,6 +35,9 @@ namespace WebVendasMVC
                     options.UseMySql(Configuration.GetConnectionString("WebVendasMVCContext"), builder => builder.MigrationsAssembly("WebVendasMVC")));
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
+            services.AddScoped<DepartmentService>();
+            services.AddScoped<SalesRecordService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +45,16 @@ namespace WebVendasMVC
         {
             if (env.IsDevelopment())
             {
+                var enUs = new CultureInfo("en-US");
+                var localizationOptions = new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(enUs),
+                    SupportedCultures = new List<CultureInfo> { enUs },
+                    SupportedUICultures = new List<CultureInfo> { enUs }
+                };
+
+                app.UseRequestLocalization(localizationOptions);
+
                 app.UseDeveloperExceptionPage();
                 seedingService.Seed();
             }
